@@ -1,5 +1,7 @@
 // (function(){
-  
+
+  const URL = "https://2ed0-2607-b400-26-0-f44e-7769-f89d-dc0b.ngrok.io/";
+
     var chat = {
       messageToSend: '',
       messageResponses: [
@@ -14,6 +16,7 @@
       $button,
       $textarea,
       $chatHistoryList,
+      latestMessage = undefined,
 
       init = function() {
         cacheDOM();
@@ -47,8 +50,9 @@
           
           // responses
           var templateResponse = Handlebars.compile( $("#message-response-template").html());
+          console.log(latestMessage)
           var contextResponse = { 
-            response: getRandomItem(chat.messageResponses),
+            response: latestMessage,
             time: getCurrentTime()
           };
           
@@ -62,8 +66,9 @@
       },
       
       addMessage = function() {
-        chat.messageToSend = $textarea.val()
-        render();         
+        message = $textarea.val()
+        chat.messageToSend = message
+        send(message)
       },
       addMessageEnter = function(event) {
           // enter was pressed
@@ -81,6 +86,29 @@
       },
       getRandomItem = function(arr) {
         return arr[Math.floor(Math.random()*arr.length)];
+      },
+      send = function(message) {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+          "message": message
+        });
+
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+
+        fetch(URL + "/ask", requestOptions)
+          .then(response => response.json())
+          .then(result => { latestMessage = result.answer })
+          .then(() => {
+            render();         
+          })
+          .catch(error => console.log('error', error));
       }
 
       window.addEventListener("DOMContentLoaded", function() {
