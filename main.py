@@ -3,32 +3,31 @@ import os
 from flask import Flask, request, send_file, jsonify
 import psycopg2
 import csv
+from flask_cors import CORS
 import get_prompt
 
 appFlask = Flask(__name__)
+CORS(appFlask)
 
 @appFlask.route('/query')
 def access_param():
-    emission_factor = request.args.get('ef')
-    sector = request.args.get('s')
-    category = request.args.get('c')
-    activity_id = request.args.get('aid')
+    emission_factor = request.args.get('emission_factor')
+    sector = request.args.get('sector')
+    category = request.args.get('category')
+    name = request.args.get('name')
 
     query = ""
-    if emission_factor != "0" and sector != "0" and category != "0" and activity_id != "0":
-        query = '''select * from public.emission_data where constituent_gases like '%{}%' and sector = '{}' and category='{}' and 
-        activity_id like '%{}%' order by year'''.format(
-            emission_factor, sector, category, activity_id)
-    elif activity_id == "0":
-        query = '''select * from public.emission_data where constituent_gases like '%{}%' and sector = '{}' and category='{}' 
-        order by year'''.format(
-            emission_factor, sector, category)
+    if emission_factor != "0" and sector != "0" and category != "0" and name != "0":
+        query = '''select year, SUM(factor) from public.emission_data where constituent_gases like '%{}%' and sector = '{}' and category='{}' and 
+        name like '%{}%' group by year'''.format(emission_factor, sector, category, name)
+    elif name == "0":
+        query = '''select year, SUM(factor) from public.emission_data where constituent_gases like '%{}%' and sector = '{}' and category='{}' 
+        group by year'''.format(emission_factor, sector, category)
         if category == "0":
-            query = '''select * from public.emission_data where constituent_gases like '%{}%' and sector = '{}' order by 
-            year'''.format(
-                emission_factor, sector)
+            query = '''select year, SUM(factor) from public.emission_data where constituent_gases like '%{}%' and sector = '{}' group by 
+            year'''.format(emission_factor, sector)
             if sector == "0":
-                query = '''select * from public.emission_data where constituent_gases like '%{}%' order by year'''.format(
+                query = '''select year, SUM(factor) from public.emission_data where constituent_gases like '%{}%' order by year'''.format(
                     emission_factor)
 
     conn = psycopg2.connect(
@@ -45,16 +44,17 @@ def access_param():
     print(type(records))
     for record in records:
         print(type(record))
+    #
+    # with open('file.csv', 'w', newline='') as f:
+    #     writer = csv.writer(f)
+    #     writer.writerows(records)
+    #
+    # csv_dir = "./"
+    # csv_file = "file.csv"
+    # csv_path = os.path.join(csv_dir, csv_file)
 
-    with open('file.csv', 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerows(records)
+    return records
 
-    csv_dir = "./"
-    csv_file = "file.csv"
-    csv_path = os.path.join(csv_dir, csv_file)
-
-    return send_file(csv_path)
 @appFlask.route('/options')
 
 def get_actions():
@@ -73,7 +73,7 @@ def get_actions():
 
     return jsonify(records)
 
-@appFlask.route('/ask')
+@appFlask.route('/ask', methods = ['POST'])
 def ask():
     body = request.get_json()
     message = body.get('message')
@@ -83,16 +83,68 @@ def ask():
 
     prompt_answer = get_prompt.send(message)
     intent = prompt_answer.get('intent')
-    actions = []
+    actions = False
 
-    if intent == 'capability':
-        actions = get_actions()
+    print(intent.keys(), intent.get('tag'))
+    if intent.get('tag') == 'capability':
+        actions = True
 
     answer = { "answer": prompt_answer.get('answer'), "actions": actions }
 
     return jsonify(answer)
 
+@appFlask.route('/Sectors')
+def get_sectors():
+    query = "select DISTINCT sector from public.emission_data"
+    conn = psycopg2.connect(
+        host="database-1.cn8qrfvgbefy.us-east-1.rds.amazonaws.com",
+        dbname="emission_data",
+        user="postgres",
+        password="postgres")
+    cur = conn.cursor()
+    print(query)
+    cur.execute(query)
+    records = cur.fetchall()
 
+    return records
+
+
+@appFlask.route('/Categories')
+def get_categories():
+    sector = request.args.get('sector')
+
+    query = "select DISTINCT category from public.emission_data where sector='{}'".format(sector)
+    conn = psycopg2.connect(
+        host="database-1.cn8qrfvgbefy.us-east-1.rds.amazonaws.com",
+        dbname="emission_data",
+        user="postgres",
+        password="postgres")
+    cur = conn.cursor()
+    print(query)
+    cur.execute(query)
+    records = cur.fetchall()
+
+    return records
+
+
+@appFlask.route('/Items')
+def get_items():
+    sector = request.args.get('sector')
+    category = request.args.get('category')
+
+    query = "select DISTINCT name from public.emission_data where sector='{}' and category='{}'".format(sector,
+                                                                                                        category)
+    conn = psycopg2.connect(
+        host="database-1.cn8qrfvgbefy.us-east-1.rds.amazonaws.com",
+        dbname="emission_data",
+        user="postgres",
+        password="postgres")
+    cur = conn.cursor()
+    print(query)
+    cur.execute(query)
+    records = cur.fetchall()
+
+    return records
 
 # close the communication with the PostgreSQL
 # cur.close()
