@@ -212,8 +212,10 @@ body {
   height: 0;
 }
 
-li{
-    text-decoration: none;
+ul{
+    
+    list-style-type: none;
+    padding-left: 5px;
 }
 
 

@@ -19,6 +19,10 @@ html,body{
     height: 100vh;
 }
 
+#main-container > a > img{
+    margin-bottom: 4%;
+}
+
 h1{
     background-image: linear-gradient(60deg, rgb(145, 16, 145) , palevioletred);
     -webkit-background-clip: text;
@@ -28,11 +32,12 @@ h1{
 }
 
 h2{
-    font-size: 52px;
+    font-size: 42px;
     font-weight: bold;
     background-image: linear-gradient(60deg, rgb(145, 16, 145) , palevioletred);
     -webkit-background-clip: text;
     color: transparent;
+    margin-bottom: 0;
 }
 
 h3{
