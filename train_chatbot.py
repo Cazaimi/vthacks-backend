@@ -1,23 +1,24 @@
 import nltk
-# nltk.download('punkt')
-# nltk.download('wordnet')
-# nltk.download('omw-1.4')
+
 from nltk.stem import WordNetLemmatizer
-lemmatizer = WordNetLemmatizer()
+
 import json
 import pickle
-
 import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout
 from keras.optimizers import SGD
 import random
+lemmatizer = WordNetLemmatizer()
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('omw-1.4')
 
 words=[]
 classes = []
 documents = []
 ignore_words = ['?', '!']
-data_file = open(r'C:/Users/upend/PycharmProjects/Simple-Python-Chatbot-master/Simple-Python-Chatbot-master/intents.json').read()
+data_file = open(r'intents.json').read()
 intents = json.loads(data_file)
 
 
