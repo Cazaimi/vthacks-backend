@@ -3,11 +3,11 @@ import os
 from flask import Flask, request, send_file
 import psycopg2
 import csv
+import 
 
 appFlask = Flask(__name__)
 
-
-@appFlask.route('/')
+@appFlask.route('/query')
 def access_param():
     emission_factor = request.args.get('ef')
     sector = request.args.get('s')
@@ -57,7 +57,15 @@ def access_param():
     return send_file(csv_path)
 
 
+@appFlask.route('/ask')
+def access_param():
+    query = request.get_json()
+    message = request.get('message')
 
+    if message == None:
+        return
+
+    return send_file(csv_path)
 
 
 
