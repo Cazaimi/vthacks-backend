@@ -107,13 +107,210 @@
           .then(response => response.json())
           .then(result => { latestMessage = result.answer
             startVisualization = result.actions == true
+            
            })
           .then(() => {
-            render();         
+            render();   
+            if(startVisualization){
+              document.getElementById("message-to-send").disabled = true;
+
+              document.getElementById("dropdowns").innerHTML = `
+              <label for="sector">Choose a sector:</label>
+              <select name="sector" id="sector">
+                  <option value="" selected="selected">Choose a sector</option>
+
+              </select>
+              <br><br>
+              <label for="category">Category</label>
+              <select name="category" id="category">
+                  <option value="" selected="selected">Choose a sector first</option>
+              </select>
+              <br><br>
+              <label for="item">Item:</label>
+              <select name="item" id="item">
+                  <option value="" selected="selected">Choose a category first</option>
+              </select>
+              <br><br>
+              <button id="send-button" onClick="getChartData()">VIZUALIZE</button>
+              `;
+
+              // const newDiv = document.createElement("div");
+
+              // // and give it some content
+              // const newContent = document.createTextNode("Hi there and greetings!");
+            
+              // // add the text node to the newly created div
+              // newDiv.appendChild(newContent);
+            
+              // // add the newly created element and its content into the DOM
+              // const currentDiv = document.getElementById("div1");
+              // document.body.insertBefore(newDiv, currentDiv);
+              var subjectObject = {}
+
+        var subjectSel = document.getElementById("sector");
+        var topicSel = document.getElementById("category");
+        var chapterSel = document.getElementById("item");
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+        fetch(URL+"Sectors", requestOptions)
+            .then(function (response) {
+                if (response.ok)
+                    return response.json();
+                return response.text();
+            })
+            .then(sectors => {
+                let sector = ""
+                for (let i = 0; i < sectors.length; i++) {
+                    sector = sectors[i][0];
+                    subjectObject[sector] = {};
+                }
+                // console.log(" Printing subjectObject below");
+                // console.log(subjectObject);
+                for (var x in subjectObject) {
+                    subjectSel.options[subjectSel.options.length] = new Option(x, x);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+
+        subjectSel.onchange = function () {
+            //empty Chapters- and Topics- dropdowns
+            chapterSel.length = 1;
+            topicSel.length = 1;
+            //display correct values
+            fetch(URL+"Categories?" + new URLSearchParams({
+                sector: subjectSel.value,
+            }
+            ),requestOptions)
+                .then(function (response) {
+                    if (response.ok)
+                        return response.json();
+                    return response.text();
+                })
+                .then(categories => {
+
+                    for (let i = 0; i < categories.length; i++){
+                        // console.log(categories[i][0])
+                        subjectObject[subjectSel.value][categories[i][0]] = []
+
+                    }
+                    // console.log(" Printing subjectObject below");
+                    // console.log(subjectObject);
+                    for (var y in subjectObject[this.value]) {
+                        topicSel.options[topicSel.options.length] = new Option(y, y);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
+        }
+        topicSel.onchange = function () {
+            //empty Chapters dropdown
+            chapterSel.length = 1;
+            //display correct values
+            fetch(URL+"Items?" + new URLSearchParams({
+                sector: subjectSel.value,
+                category: topicSel.value,
+            }
+            ),requestOptions)
+                .then(function (response) {
+                    if (response.ok)
+                        return response.json();
+                    return response.text();
+                })
+                .then(items => {
+
+                    for (let i = 0; i < items.length; i++){
+                        // console.log(items[i][0])
+                        subjectObject[subjectSel.value][topicSel.value].push(items[i][0])
+                    }
+                    // console.log(" Printing subjectObject below");
+                    // console.log(subjectObject);
+                    var z = subjectObject[subjectSel.value][this.value];
+                    for (var i = 0; i < z.length; i++) {
+                        chapterSel.options[chapterSel.options.length] = new Option(z[i], z[i]);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
+        }
+            }      
           })
           .catch(error => console.log('error', error));
       }
 
+      function getChartData(){
+        var requestOptions = {
+          method: 'POST',
+          // headers: myHeaders,
+          // body: raw,
+          redirect: 'follow'
+        };
+        var sectorSel = document.getElementById("sector").value;
+        var categorySel = document.getElementById("category").value;
+        var itemSel = document.getElementById("item").value;
+
+        if(sectorSel == ''){
+            sectorSel = '0'
+        }
+        if(categorySel == ''){
+            categorySel = '0'
+        }
+        if(itemSel == ''){
+            itemSel = '0'
+        }
+
+        fetch(URL+"query?" + new URLSearchParams({
+        emission_factor: 'co2',
+        sector: sectorSel,
+        category: categorySel,
+        name: itemSel,
+    }),requestOptions)
+        .then(function (response) {
+            if (response.ok)
+                return response.json();
+            return response.text();
+        })
+        .then(chartData => {
+            // let area = document.getElementById("data");
+            let content = ""
+            var xa = [];
+            var ya = [];
+            console.log("we received: ", chartData);
+            for (let i = 0; i < chartData.length; i++){
+                xa.push(chartData[i][0].toString()) ;
+                ya.push(chartData[i][1]) ;
+
+                // content += chartData[i] + "<br><br>";
+            }
+            // area.innerHTML = content;
+
+            var data = [
+            {
+                x: xa,
+                y: ya,
+                name: 'CO2 Emission',
+                type: 'bar',
+                // width: 1
+            }
+            ];
+
+            Plotly.newPlot('infoviz', data);
+
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
       window.addEventListener("DOMContentLoaded", function() {
         init();
     }, false);

@@ -52,8 +52,8 @@
                               
                             </ul>
                             
+                            <div id="dropdowns"></div>  
                           </div> <!-- end chat-history -->
-                          
                           
                           
                         </div> <!-- end chat -->
@@ -69,6 +69,8 @@
                         <div class="message other-message float-right">
                           {{messageOutput}}
                         </div>
+                        
+                        
                       </li>
                     </script>
                     
@@ -81,6 +83,7 @@
                         <div class="message my-message">
                           {{response}}
                         </div>
+                        <!-- <div id="dropdowns"></div> -->
                       </li>
                     </script>
                     
@@ -114,8 +117,46 @@
                     type: 'bar'
                 }
                 ];
+    var layout = {
+                    showlegend: true,
+                    legend: {
+                      x: 1,
+                      xanchor: 'right',
+                      y: 1
+                    },
+                    title: {
+                          text:'Plot Title',
+                          font: {
+                            family: 'poppins',
+                            size: 24,
+                            weight: 500
+                          },
+                          xref: 'paper',
+                          x: 0.05,
+                          },
+                          xaxis: {
+                          title: {
+                            text: 'YEAR',
+                            font: {
+                              family: 'Courier New, monospace',
+                              size: 18,
+                              color: '#7f7f7f'
+                            }
+                          },
+                          },
+                          yaxis: {
+                          title: {
+                            text: 'CO2 EMISSION',
+                            font: {
+                              family: 'Courier New, monospace',
+                              size: 18,
+                              color: '#7f7f7f'
+                            }
+                          }
+                          }
+                  };
 
-                Plotly.newPlot('infoviz', data);
+                Plotly.newPlot('infoviz', data, layout);
 </script>
 
 </html>
