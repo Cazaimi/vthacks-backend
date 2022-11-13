@@ -17,6 +17,7 @@
       $textarea,
       $chatHistoryList,
       latestMessage = undefined,
+      startVisualization = false,
 
       init = function() {
         cacheDOM();
@@ -104,7 +105,9 @@
 
         fetch(URL + "/ask", requestOptions)
           .then(response => response.json())
-          .then(result => { latestMessage = result.answer })
+          .then(result => { latestMessage = result.answer
+            startVisualization = result.actions == true
+           })
           .then(() => {
             render();         
           })
