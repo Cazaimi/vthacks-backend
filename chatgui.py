@@ -13,8 +13,8 @@ model = load_model('chatbot_model.h5')
 import json
 import random
 intents = json.loads(open(os.path.join(ROOT_DIR, 'intents.json')).read())
-words = pickle.load(open(r'C:/Users/upend/PycharmProjects/Simple-Python-Chatbot-master/words.pkl','rb'))
-classes = pickle.load(open(r'C:/Users/upend/PycharmProjects/Simple-Python-Chatbot-master/classes.pkl','rb'))
+words = pickle.load(open(r'words.pkl','rb'))
+classes = pickle.load(open(r'classes.pkl','rb'))
 
 
 def clean_up_sentence(sentence):
@@ -73,7 +73,7 @@ def chatbot_response(msg):
 
 def send(message='Hello'):
     if message != '':
-        return chatbot_response(msg)
+        return chatbot_response(message)
         
 
 
@@ -108,4 +108,6 @@ def send(message='Hello'):
 # SendButton.place(x=6, y=401, height=90)
 
 # base.mainloop()
-send()
+print(send('How can you help'))
+
+#print('Hello')

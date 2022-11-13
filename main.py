@@ -1,9 +1,9 @@
 import os
 
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, jsonify
 import psycopg2
 import csv
-import 
+import chatgui
 
 appFlask = Flask(__name__)
 
@@ -58,14 +58,16 @@ def access_param():
 
 
 @appFlask.route('/ask')
-def access_param():
-    query = request.get_json()
-    message = request.get('message')
+def ask():
+    body = request.get_json()
+    message = body.get('message')
 
     if message == None:
         return
 
-    return send_file(csv_path)
+    answer = { "answer": chatgui.send(message), "actions": [] }
+
+    return jsonify(answer)
 
 
 
