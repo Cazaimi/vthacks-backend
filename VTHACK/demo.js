@@ -115,24 +115,38 @@
               document.getElementById("message-to-send").disabled = true;
 
               document.getElementById("dropdowns").innerHTML = `
-              <label for="sector">Choose a sector:</label>
-              <select name="sector" id="sector">
-                  <option value="" selected="selected">Choose a sector</option>
+              <table>
+                <tr>
+                  <td><label for="sector">Choose a sector:</label></td>
+                  <td>
+                    <select name="sector" id="sector">
+                      <option value="" selected="selected">Choose a sector</option>
+                    </select>
+                  </td>
+                </tr>
+              
 
-              </select>
-              <br><br>
-              <label for="category">Category</label>
-              <select name="category" id="category">
-                  <option value="" selected="selected">Choose a sector first</option>
-              </select>
-              <br><br>
-              <label for="item">Item:</label>
-              <select name="item" id="item">
-                  <option value="" selected="selected">Choose a category first</option>
-              </select>
-              <br><br>
-              <button id="send-button" onClick="getChartData()">VIZUALIZE</button>
-              `;
+                <tr>
+                  <td><label for="category">Category:</label></td>
+                  <td>
+                    <select name="category" id="category">
+                      <option value="" selected="selected">Choose a sector first</option>
+                    </select>
+                  </td>
+                </tr>
+
+
+                <tr>
+                  <td><label for="item">Item:</label></td>
+                  <td>
+                    <select name="item" id="item">
+                      <option value="" selected="selected">Choose a category first</option>
+                    </select>
+                  </td>
+                </tr>
+
+              </table>
+              <button id="send-button" style="padding: 2% 4%;" onClick="getChartData()">VIZUALIZE</button>`;
 
               // const newDiv = document.createElement("div");
 
@@ -298,11 +312,57 @@
             {
                 x: xa,
                 y: ya,
-                name: 'CO2 Emission',
+                name: 'CO2 Emitted (in kg) / US Dollar spent',
                 type: 'bar',
                 // width: 1
             }
             ];
+
+            var layout = {
+              showlegend: true,
+              legend: {
+                x: 1.08,
+                xanchor: 'right',
+                y: 1.05,
+                name: 'CO2'
+              },
+              title: {
+                    text:'Carbon footprint for different sectors',
+                    font: {
+                      family: 'poppins',
+                      size: 34,
+                      weight: 800
+                    },
+                    xref: 'paper',
+                    x: 0.05,
+                    },
+                    xaxis: {
+                    title: {
+                      text: 'YEAR',
+                      font: {
+                        family: 'Courier New, monospace',
+                        size: 18,
+                        color: '#7f7f7f',
+                        weight: 800
+                      }
+                    },
+                    autotick: false,
+                    ticks: 'outside',
+                    tick0: 0
+                    },
+                    yaxis: {
+                    title: {
+                      text: 'CO2 EMISSION',
+                      font: {
+                        family: 'Courier New, monospace',
+                        size: 18,
+                        color: '#7f7f7f',
+                        weight: 800
+                      },
+                      
+                    }
+                    }
+            };
 
             Plotly.newPlot('infoviz', data);
 

@@ -112,24 +112,29 @@
 <script>
     var data = [
                 {
-                    x: ['giraffes', 'orangutans', 'monkeys'],
-                    y: [20, 14, 23],
-                    type: 'bar'
+                    x: [2020, 2021, 2022],
+                    y: [118.32, 694.26, 350.7],
+                    range: [2020, 2022],
+                    ticks: [0, 3],
+                    type: 'bar',
+                    marker: {
+		                    color: '#630031'}
                 }
                 ];
     var layout = {
                     showlegend: true,
                     legend: {
-                      x: 1,
+                      x: 1.08,
                       xanchor: 'right',
-                      y: 1
+                      y: 1.05,
+                      name: 'CO2'
                     },
                     title: {
-                          text:'Plot Title',
+                          text:'Carbon footprint for different sectors',
                           font: {
                             family: 'poppins',
-                            size: 24,
-                            weight: 500
+                            size: 34,
+                            weight: 800
                           },
                           xref: 'paper',
                           x: 0.05,
@@ -140,18 +145,24 @@
                             font: {
                               family: 'Courier New, monospace',
                               size: 18,
-                              color: '#7f7f7f'
+                              color: '#7f7f7f',
+                              weight: 800
                             }
                           },
+                          autotick: false,
+                          ticks: 'outside',
+                          tick0: 0
                           },
                           yaxis: {
                           title: {
-                            text: 'CO2 EMISSION',
+                            text: 'CO2 Emitted (in kg) / US Dollar spent',
                             font: {
                               family: 'Courier New, monospace',
                               size: 18,
-                              color: '#7f7f7f'
-                            }
+                              color: '#7f7f7f',
+                              weight: 800
+                            },
+                            
                           }
                           }
                   };
