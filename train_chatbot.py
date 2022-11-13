@@ -18,7 +18,7 @@ words=[]
 classes = []
 documents = []
 ignore_words = ['?', '!']
-data_file = open(r'C:/Users/upend/PycharmProjects/Simple-Python-Chatbot-master/Simple-Python-Chatbot-master/intents.json').read()
+data_file = open(r'intents.json').read()
 intents = json.loads(data_file)
 
 

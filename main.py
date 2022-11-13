@@ -3,7 +3,7 @@ import os
 from flask import Flask, request, send_file, jsonify
 import psycopg2
 import csv
-import chatgui
+import get_prompt
 
 appFlask = Flask(__name__)
 
@@ -55,7 +55,23 @@ def access_param():
     csv_path = os.path.join(csv_dir, csv_file)
 
     return send_file(csv_path)
+@appFlask.route('/options')
 
+def get_actions():
+    query = '''select * from classification '''
+
+    conn = psycopg2.connect(
+        host="database-1.cn8qrfvgbefy.us-east-1.rds.amazonaws.com",
+        dbname="emission_data",
+        user="postgres",
+        password="postgres")
+    cur = conn.cursor()
+    print(query)
+    cur.execute(query)
+    records = cur.fetchall()
+    print(records)
+
+    return jsonify(records)
 
 @appFlask.route('/ask')
 def ask():
@@ -65,7 +81,14 @@ def ask():
     if message == None:
         return
 
-    answer = { "answer": chatgui.send(message), "actions": [] }
+    prompt_answer = get_prompt.send(message)
+    intent = prompt_answer.get('intent')
+    actions = []
+
+    if intent == 'capability':
+        actions = get_actions()
+
+    answer = { "answer": prompt_answer.get('answer'), "actions": actions }
 
     return jsonify(answer)
 

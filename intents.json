@@ -1,9 +1,17 @@
 {"intents": [
+    {"tag": "options",
+         "patterns": ["How you could help me?", "What you can do?", "What help you provide?", "How you can be helpful?", "What support is offered"],
+         "responses": ["I can guide you with tracking Carbon dioxide emissions and other useful insights by visualizing data",
+           "Offering support to decision makers like you to implement change in the world. Also, use my data visualization functionality",
+           "You can use my visualization functionality or ask me questions about co2 emissions and other useful information"],
+         "context": [""]
+        },
+
     {"tag": "greeting",
-     "patterns": ["Hi there", "How are you", "Is anyone there?","Hey","Hola", "Hello", "Good day"],
-     "responses": ["Hello, thanks for asking", "Good to see you again", "Hi there, how can I help?"],
-     "context": [""]
-    },
+         "patterns": ["Hi there", "Is anyone there?","Hey","Hola", "Hello", "Good day"],
+         "responses": ["Hello, thanks for asking", "Good to see you again", "Hi there, how can I help?"],
+         "context": [""]
+        },
     {"tag": "goodbye",
      "patterns": ["Bye", "See you later", "Goodbye", "Nice chatting to you, bye", "Till next time"],
      "responses": ["See you!", "Have a nice day", "Bye! Come back again soon."],
@@ -16,58 +24,47 @@
     },
     {"tag": "noanswer",
      "patterns": [],
-     "responses": ["Sorry, can't understand you", "Please give me more info", "Not sure I understand"],
+     "responses": ["Sorry, can't understand you", "Please give me more info", "Not sure I understand",
+       "I couldn't understand you but type fact if you want to know a random fact... "],
      "context": [""]
     },
-    {"tag": "options",
-     "patterns": ["How you could help me?", "What you can do?", "What help you provide?", "How you can be helpful?", "What support is offered"],
-     "responses": ["I can guide you through Adverse drug reaction list, Blood pressure tracking, Hospitals and Pharmacies", "Offering support for Adverse drug reaction, Blood pressure, Hospitals and Pharmacies"],
-     "context": [""]
-    },
-    {"tag": "adverse_drug",
-     "patterns": ["How to check Adverse drug reaction?", "Open adverse drugs module", "Give me a list of drugs causing adverse behavior", "List all drugs suitable for patient with adverse reaction", "Which drugs dont have adverse reaction?" ],
-     "responses": ["Navigating to Adverse drug reaction module"],
-     "context": [""]
-    },
-    {"tag": "blood_pressure",
-     "patterns": ["Open blood pressure module", "Task related to blood pressure", "Blood pressure data entry", "I want to log blood pressure results", "Blood pressure data management" ],
-     "responses": ["Navigating to Blood Pressure module"],
-     "context": [""]
-    },
-    {"tag": "blood_pressure_search",
-     "patterns": ["I want to search for blood pressure result history", "Blood pressure for patient", "Load patient blood pressure result", "Show blood pressure results for patient", "Find blood pressure results by ID" ],
-     "responses": ["Please provide Patient ID", "Patient ID?"],
-     "context": ["search_blood_pressure_by_patient_id"]
-    },
-    {"tag": "search_blood_pressure_by_patient_id",
-     "patterns": [],
-     "responses": ["Loading Blood pressure result for Patient"],
-     "context": [""]
-    },
-    {"tag": "pharmacy_search",
-     "patterns": ["Find me a pharmacy", "Find pharmacy", "List of pharmacies nearby", "Locate pharmacy", "Search pharmacy" ],
-     "responses": ["Please provide pharmacy name"],
-     "context": ["search_pharmacy_by_name"]
-    },
-    {"tag": "search_pharmacy_by_name",
-     "patterns": [],
-     "responses": ["Loading pharmacy details"],
-     "context": [""]
-    },
+
     {"tag": "hate_speech",
     "patterns": ["Fuck You", "Kill you", "I hate you", "Crime", "I will commit a crime"],
     "responses": ["PLEASE AVOID HATE SPEECH OVER HERE"],
     "context": [""]
     },
-    {"tag": "search_hospital_by_params",
-     "patterns": [],
-     "responses": ["Please provide hospital type"],
-     "context": ["search_hospital_by_type"]
-    },
-    {"tag": "search_hospital_by_type",
-     "patterns": [],
-     "responses": ["Loading hospital details"],
-     "context": [""]
-    }
+    {"tag": "capability",
+    "patterns": ["What sectors are there",
+      "Information about sectors", "Can you tell me about transportation sector", "Information about transportation",
+      "Can you tell me about consumer goods", "consumer goods","Can you tell me about Health and social care", "Information about health and social care",
+    "Can you tell me about Energy", "Information about transportation Energy","transportation sector", "transportation",
+    "Energy data", "Energy data"],
+    "responses": ["I will tell you about various sectors, I am happy to help.","Yes, let me fetch the data for you","Okay, give me a moment"],
+    "context": ["co2e_data"]},
+    {"tag": "capability_category",
+      "patterns": ["What categories are there",
+        "Information about categories", "Can you tell me about building materials", "Information about Vehicles",
+        "Can you tell me about consumer goods", "consumer goods","Can you tell me about ceramic goods", "Information about health and social care", "Yes, tell me about this category",
+      "Can you tell me about Energy and Electricity"," Tell me about equipment","What data do you have about gardening","Are you telling me about fuel and steam" ,"Give information about Electricity","About Air freight", "air travel",
+      "rail travel data", "vehicles data","clothing and footwear", "Food and beverage and also tobacco", "I want to look at heat and steam"," Give information on Chemical products"],
+      "responses": ["Please use my visualization functionality to understand more","Yes, I am glad to assist you here","Okay, let me take a look"],
+      "context": ["co2e-data"]
+      },
+    {"tag": "reduce_emissions",
+      "patterns": [" How can I contribute",
+        "Am I capable to bring change", "I want to reduce pollution ", "Some techniques to implement in workplace",
+        "Will you help me understand how I can help"],
+      "responses": ["We need to use more clean energy – and use that energy more efficiently — to power everything from our cell phones to our homes, offices, and factories. ",
+        "Yes, of course. Some ways of reducing electricity emissions are by using renewable energies, carbon capture and nuclear power","Sure, I will ask someone from my tea to share useful resources"],
+      "context": [""]
+      },
+      {"tag": "random_facts",
+      "patterns": ["Give me a fact","fact"," interesting information"],
+      "responses": ["Twenty-nine percent of U.S. greenhouse gas emissions come from generating electricity",
+        "Transportation is the largest source of greenhouse gas emissions in the United States, primarily due to cars and trucks that burn gasoline and diesel fuel",
+      "Land usage like agriculture stores more greenhouse gas emissions in soil and plants than it might emit."],
+      "context": [""]
+       }
 ]
 }
