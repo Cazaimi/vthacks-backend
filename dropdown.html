@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src='https://cdn.plot.ly/plotly-2.16.1.min.js'></script>
+</head>
+
+<body>
+    <form action="/action_page.php">
+        <label for="sector">Choose a sector:</label>
+        <select name="sector" id="sector">
+            <option value="" selected="selected">Choose a sector</option>
+
+        </select>
+        <br><br>
+        <label for="category">Category</label>
+        <select name="category" id="category">
+            <option value="" selected="selected">Choose a sector first</option>
+        </select>
+        <br><br>
+        <label for="item">Item:</label>
+        <select name="item" id="item">
+            <option value="" selected="selected">Choose a category first</option>
+        </select>
+        <br><br>
+
+        <input type="button" onclick="getChartData()" value="Submit form">
+    </form>
+    <h2>Data:</h2>
+    <br><br>
+    <p id="data"></p>
+
+    <div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+</body>
+
+
+<script>
+    //     var subjectObject = {
+    //   "Front-end": {
+    //     "HTML": ["Links", "Images", "Tables", "Lists"],
+    //     "CSS": ["Borders", "Margins", "Backgrounds", "Float"],
+    //     "JavaScript": ["Variables", "Operators", "Functions", "Conditions"]
+    //   },
+    //   "Back-end": {
+    //     "PHP": ["Variables", "Strings", "Arrays"],
+    //     "SQL": ["SELECT", "UPDATE", "DELETE"]
+    //   }
+    // }
+
+
+
+
+
+    window.onload = function () {
+        var subjectObject = {}
+
+        var subjectSel = document.getElementById("sector");
+        var topicSel = document.getElementById("category");
+        var chapterSel = document.getElementById("item");
+        fetch("http://127.0.0.1:5000/Sectors")
+            .then(function (response) {
+                if (response.ok)
+                    return response.json();
+                return response.text();
+            })
+            .then(sectors => {
+                let sector = ""
+                for (let i = 0; i < sectors.length; i++) {
+                    sector = sectors[i][0];
+                    subjectObject[sector] = {};
+                }
+                // console.log(" Printing subjectObject below");
+                // console.log(subjectObject);
+                for (var x in subjectObject) {
+                    subjectSel.options[subjectSel.options.length] = new Option(x, x);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+
+        subjectSel.onchange = function () {
+            //empty Chapters- and Topics- dropdowns
+            chapterSel.length = 1;
+            topicSel.length = 1;
+            //display correct values
+            fetch("http://127.0.0.1:5000/Categories?" + new URLSearchParams({
+                sector: subjectSel.value,
+            }
+            ))
+                .then(function (response) {
+                    if (response.ok)
+                        return response.json();
+                    return response.text();
+                })
+                .then(categories => {
+
+                    for (let i = 0; i < categories.length; i++){
+                        // console.log(categories[i][0])
+                        subjectObject[subjectSel.value][categories[i][0]] = []
+
+                    }
+                    // console.log(" Printing subjectObject below");
+                    // console.log(subjectObject);
+                    for (var y in subjectObject[this.value]) {
+                        topicSel.options[topicSel.options.length] = new Option(y, y);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
+        }
+        topicSel.onchange = function () {
+            //empty Chapters dropdown
+            chapterSel.length = 1;
+            //display correct values
+            fetch("http://127.0.0.1:5000/Items?" + new URLSearchParams({
+                sector: subjectSel.value,
+                category: topicSel.value,
+            }
+            ))
+                .then(function (response) {
+                    if (response.ok)
+                        return response.json();
+                    return response.text();
+                })
+                .then(items => {
+
+                    for (let i = 0; i < items.length; i++){
+                        // console.log(items[i][0])
+                        subjectObject[subjectSel.value][topicSel.value].push(items[i][0])
+                    }
+                    // console.log(" Printing subjectObject below");
+                    // console.log(subjectObject);
+                    var z = subjectObject[subjectSel.value][this.value];
+                    for (var i = 0; i < z.length; i++) {
+                        chapterSel.options[chapterSel.options.length] = new Option(z[i], z[i]);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
+        }
+    }
+
+    function getChartData(){
+        var sectorSel = document.getElementById("sector").value;
+        var categorySel = document.getElementById("category").value;
+        var itemSel = document.getElementById("item").value;
+
+        if(sectorSel == ''){
+            sectorSel = '0'
+        }
+        if(categorySel == ''){
+            categorySel = '0'
+        }
+        if(itemSel == ''){
+            itemSel = '0'
+        }
+
+        fetch("http://127.0.0.1:5000/query?" + new URLSearchParams({
+        emission_factor: 'co2',
+        sector: sectorSel,
+        category: categorySel,
+        name: itemSel,
+    }))
+        .then(function (response) {
+            if (response.ok)
+                return response.json();
+            return response.text();
+        })
+        .then(chartData => {
+            let area = document.getElementById("data");
+            let content = ""
+            var xa = [];
+            var ya = [];
+            console.log("we received: ", chartData);
+            for (let i = 0; i < chartData.length; i++){
+                xa.push(chartData[i][0]) ;
+                ya.push(chartData[i][1]) ;
+
+                content += chartData[i] + "<br><br>";
+            }
+            area.innerHTML = content;
+
+            var data = [
+            {
+                x: xa,
+                y: ya,
+                type: 'bar',
+                // width: 1
+            }
+            ];
+
+            Plotly.newPlot('myDiv', data);
+
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    }
+
+
+</script>
+
+</html>

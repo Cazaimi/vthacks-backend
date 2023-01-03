@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+html,body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+#main-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* background-image: linear-gradient(to right, rgb(145, 16, 145) , palevioletred); */
+    background-color: black;
+    color: white;
+    height: 100vh;
+}
+
+#main-container > a > img{
+    margin-bottom: 4%;
+}
+
+h1{
+    background-image: linear-gradient(60deg, rgb(145, 16, 145) , palevioletred);
+    -webkit-background-clip: text;
+    color: transparent;
+    font-size: 62px;
+    font-weight: bold;
+}
+
+h2{
+    font-size: 42px;
+    font-weight: bold;
+    background-image: linear-gradient(60deg, rgb(145, 16, 145) , palevioletred);
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 0;
+}
+
+h3{
+    font-size: 32px;
+    font-weight: bold;
+    background-image: linear-gradient(60deg, rgb(145, 16, 145) , palevioletred);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+img:hover {
+    /* Start the shake animation and make the animation last for 0.5 seconds */
+    animation: shake 0.8s;
+  
+    /* When the animation is finished, start again */
+    animation-iteration-count: infinite;
+  }
+  
+  @keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  }
+
+
+#main-body{
+    display: flex;
+    flex-direction: column;
+}
+
+#header{
+    background-color: black;
+    width: 100%;
+    height: 10%;
+    color: white;
+    text-align: center;
+}
+
+#header > h1{
+    margin: 0;
+}
+
+#viz-bot{
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+#infoviz{
+    flex: 2;
+    width: 100%;
+    height: 90vh;
+    
+}
+
+#bot{
+    display: flex;
+    flex: 0.8;
+    background-image: linear-gradient(to right, rgb(145, 16, 145) , palevioletred);;
+    height: 90vh;
+    margin-top: 3%;
+    flex-direction: column;
+}
+
+#bot-header{
+    background:black;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#bot-header> div > img{
+    height: 70%;
+    margin-top: 3%;
+    margin-left: 3%;
+}
+
+#susbot{
+    color: white;
+    font-size: 32px;
+}
+
+#bot-footer{
+    background:black;
+    height: 10%;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+#bot-body{
+    background:white;
+    height: 80%;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    position: relative;
+}
+
+#robo-head{
+    height: 100%;
+    padding: 2%;
+    margin-top: 2%;
+}
+
+
